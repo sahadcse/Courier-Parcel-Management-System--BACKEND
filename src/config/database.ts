@@ -1,0 +1,1 @@
+// # MongoDB Atlas connection setup (Mongoose)

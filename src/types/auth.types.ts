@@ -1,0 +1,1 @@
+// # TypeScript interfaces for auth (User, Token)

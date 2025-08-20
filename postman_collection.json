@@ -1,1 +1,7 @@
-"# Postman collection for API testing"
+{
+  "name": "Health Check",
+  "request": {
+    "method": "GET",
+    "url": "{{base_url}}/api/v1/health/check"
+  }
+}

@@ -1,6 +1,6 @@
 import { Server as HttpServer } from 'http';
 import { Server, Socket } from 'socket.io';
-import { verifyAccessToken } from '@utils/jwt'; // Your JWT verification function
+import { verifyAccessToken } from './../utils/jwt';
 import cookie from 'cookie';
 
 // Extend the Socket interface to include a 'user' property

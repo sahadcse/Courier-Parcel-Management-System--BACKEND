@@ -1,27 +1,38 @@
 // # Mongoose schema for tracking
 
-import { Schema } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
-// Tracking Schema
-export const trackingSchema = new Schema({
-  parcel: {
-    type: Schema.Types.ObjectId,
-    ref: 'Parcel',
-    required: true
+// First, define the schema for the nested GeoJSON Point object
+const pointSchema = new Schema({
+  type: {
+    type: String,
+    enum: ['Point'],
+    required: true,
   },
   coordinates: {
-    type: {
-      lat: { type: Number, required: true },
-      lng: { type: Number, required: true }
-    },
-    required: true
+    type: [Number], // [longitude, latitude]
+    required: true,
+  },
+}, { _id: false }); // Disable _id for this subdocument
+
+// Now, define the main tracking schema
+const trackingSchema = new Schema({
+  parcel: {
+    type: String,
+    required: true,
+    index: true,
+  },
+  coordinates: {
+    type: pointSchema,
+    required: true,
   },
   timestamp: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
 });
 
-trackingSchema.index({ parcel: 1 });
-trackingSchema.index({ coordinates: '2dsphere' }); // Geospatial index
-trackingSchema.index({ timestamp: 1 });
+// Apply the geospatial index
+trackingSchema.index({ coordinates: '2dsphere' });
+
+export const Tracking = mongoose.model('Tracking', trackingSchema);

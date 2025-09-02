@@ -1,72 +1,102 @@
 // # Mongoose schema for parcels
 
-import { Schema } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
-// Parcels Schema
-export const parcelSchema = new Schema({
+
+const pointSchema = new Schema({
+  type: {
+    type: String,
+    enum: ['Point'],
+    required: true
+  },
+  coordinates: {
+    type: [Number], // [longitude, latitude]
+    required: true
+  }
+}, { _id: false });
+
+
+const parcelSchema = new Schema({
   parcelId: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
+    index: true,
   },
-  customer: {
+  sender: {
     type: Schema.Types.ObjectId,
     ref: 'User',
-    required: true
+    required: true,
   },
   assignedAgent: {
     type: Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'User',
   },
   pickupAddress: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
   },
   deliveryAddress: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
+  },
+  deliveryCoordinates: {
+    type: pointSchema,
+    index: '2dsphere' // Important for location-based queries
+  },
+  receiverName: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  receiverNumber: {
+    type: String, 
+    required: true,
+    trim: true,
   },
   parcelType: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
   },
   parcelSize: {
     type: String,
     enum: ['small', 'medium', 'large'],
-    required: true
+    required: true,
   },
   paymentType: {
     type: String,
     enum: ['COD', 'prepaid'],
-    required: true
+    required: true,
   },
   codAmount: {
     type: Number,
-    default: 0
+    default: 0,
+    validate: {
+      validator: function (this: any, value: number) {
+        return this.paymentType !== 'COD' ? value === 0 : true;
+      },
+      message: 'codAmount must be 0 for prepaid payments.',
+    },
   },
   status: {
     type: String,
     enum: ['Booked', 'Assigned', 'Picked Up', 'In Transit', 'Delivered', 'Failed'],
-    default: 'Booked'
+    default: 'Booked',
   },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now
-  },
-  qrCode: { // Bonus: QR code data or URL
+  qrCode: {
     type: String,
-    default: null
-  }
+    default: null,
+  },
+}, {
+  timestamps: true, 
 });
 
-parcelSchema.index({ parcelId: 1 });
-parcelSchema.index({ assignedAgent: 1 });
-parcelSchema.index({ customer: 1 });
+parcelSchema.index({ sender: 1, status: 1 });
+parcelSchema.index({ assignedAgent: 1, status: 1 });
 parcelSchema.index({ status: 1 });
+parcelSchema.index({ parcelId: 1 });
+
+export const Parcel = mongoose.model("Parcel", parcelSchema)

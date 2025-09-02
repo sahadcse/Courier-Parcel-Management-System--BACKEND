@@ -1,47 +1,55 @@
 // # Mongoose schema for users
 
-import { Schema } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
 // Users Schema
-export const userSchema = new Schema({
-  username: {
-    type: String,
-    required: true,
-    unique: true,
-    trim: true
+const userSchema = new Schema(
+  {
+    customerName: {
+      type: String,
+      required: true,
+      minlength: 3,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+    },
+    password: {
+      type: String,
+      required: true,
+      select: false,
+    },
+    role: {
+      type: String,
+      enum: ['admin', 'agent', 'customer'],
+      required: true,
+      default: 'customer',
+    },
+    phone: {
+      type: String,
+      trim: true,
+    },
+    address: {
+      type: String,
+      trim: true,
+    },
+    isActive: {
+      type: Boolean,
+      default: false,
+    },
   },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    trim: true,
-    lowercase: true
-  },
-  password: {
-    type: String,
-    required: true
-  },
-  role: {
-    type: String,
-    enum: ['admin', 'agent', 'customer'],
-    required: true
-  },
-  phone: {
-    type: String,
-    trim: true
-  },
-  address: {
-    type: String,
-    trim: true
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now
+  {
+    timestamps: true,
+    collection: 'users',
   }
-});
+);
 
+// Indexes for quick lookups
 userSchema.index({ email: 1 });
+userSchema.index({ role: 1 });
+userSchema.index({ isActive: 1 });
+
+export const User = mongoose.model('User', userSchema);

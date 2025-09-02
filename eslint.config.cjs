@@ -1,7 +1,7 @@
 // eslint.config.cjs
-const pluginJs = require('@eslint/js');
-const tseslint = require('typescript-eslint');
-const pluginPrettier = require('eslint-plugin-prettier');
+import pluginJs from '@eslint/js';
+import tseslint from 'typescript-eslint';
+import pluginPrettier from 'eslint-plugin-prettier';
 
 module.exports = [
   // Base JavaScript recommended rules

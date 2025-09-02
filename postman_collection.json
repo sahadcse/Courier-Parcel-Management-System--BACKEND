@@ -1,7 +1,141 @@
 {
-  "name": "Health Check",
-  "request": {
-    "method": "GET",
-    "url": "{{base_url}}/api/v1/health/check"
-  }
+  "info": {
+    "name": "Courier & Parcel Management System API",
+    "description": "Complete API collection for Courier & Parcel Management System",
+    "version": "1.0.0",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health & System",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/v1/health/check",
+            "description": "Check system health and database connectivity"
+          },
+          "response": []
+        },
+        {
+          "name": "Root Endpoint",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/",
+            "description": "API information endpoint"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register Customer",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/v1/auth/register",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"customer1\",\n  \"email\": \"customer@example.com\",\n  \"password\": \"Password123!\",\n  \"role\": \"customer\",\n  \"phone\": \"+1234567890\",\n  \"address\": \"123 Customer St, City, State 12345\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Register Agent",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/v1/auth/register",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"agent1\",\n  \"email\": \"agent@example.com\",\n  \"password\": \"Password123!\",\n  \"role\": \"agent\",\n  \"phone\": \"+1234567891\",\n  \"address\": \"456 Agent Ave, City, State 12345\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Register Admin",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/v1/auth/register",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin1\",\n  \"email\": \"admin@example.com\",\n  \"password\": \"Password123!\",\n  \"role\": \"admin\",\n  \"phone\": \"+1234567892\",\n  \"address\": \"789 Admin Blvd, City, State 12345\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/v1/auth/login",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{user_email}}\",\n  \"password\": \"{{user_password}}\"\n}"
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Protected Routes",
+      "item": [
+        {
+          "name": "Protected Resource (Admin/Agent)",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/v1/protectedCheck/protected",
+            "description": "Access protected resource (requires admin or agent role)"
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:5000",
+      "type": "string"
+    },
+    {
+      "key": "user_email",
+      "value": "customer@example.com",
+      "type": "string"
+    },
+    {
+      "key": "user_password",
+      "value": "Password123!",
+      "type": "string"
+    }
+  ]
 }

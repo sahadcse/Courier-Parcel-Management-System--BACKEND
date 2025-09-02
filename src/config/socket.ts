@@ -3,6 +3,13 @@ import { Server, Socket } from 'socket.io';
 import { verifyAccessToken } from '@utils/jwt'; // Your JWT verification function
 import cookie from 'cookie';
 
+// Extend the Socket interface to include a 'user' property
+declare module 'socket.io' {
+  interface Socket {
+    user?: any;
+  }
+}
+
 let io: Server;
 const userSocketMap = new Map<string, string>();
 

@@ -10,7 +10,7 @@ import { logger } from '@utils/logger';
  * Controller to handle fetching all users.
  */
 export const getAllUsers = async (
-  req: Request,
+  _req: Request,
   res: Response,
   next: NextFunction
 ) => {
@@ -31,7 +31,7 @@ export const getAllUsers = async (
 
 
 export const getDashboardAnalytics = async (
-  req: Request,
+  _req: Request,
   res: Response,
   next: NextFunction
 ) => {

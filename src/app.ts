@@ -1,5 +1,19 @@
 // # Main Express app setup (middleware, routes, Socket.IO)
 
+// ADD THESE LINES AT THE VERY TOP OF THE FILE
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('FATAL: Unhandled Rejection at:', promise, 'reason:', reason);
+  // Application specific logging, throwing an error, or other logic here
+});
+
+process.on('uncaughtException', (error) => {
+  console.error('FATAL: Uncaught Exception:', error);
+  // Application specific logging, throwing an error, or other logic here
+  process.exit(1); // It's generally recommended to exit on uncaught exceptions
+});
+// END OF NEW LINES
+
+
 // src/app.ts
 import express, { Request, Response } from 'express';
 import http from 'http';

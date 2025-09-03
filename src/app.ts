@@ -29,7 +29,7 @@ app.use(
     contentSecurityPolicy: {
       directives: {
         ...helmet.contentSecurityPolicy.getDefaultDirectives(),
-        'connect-src': ["'self'", 'ws://localhost:5000'], // Allow connections to self and WebSockets on your origin
+        'connect-src': ["'self'", process.env.CORS_ORIGIN || 'http://localhost:5000'],
       },
     },
   })

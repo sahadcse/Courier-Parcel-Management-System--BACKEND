@@ -16,7 +16,7 @@ const userSocketMap = new Map<string, string>();
 export const initSocket = (httpServer: HttpServer) => {
   io = new Server(httpServer, {
     cors: {
-      origin: process.env.FRONTEND_URL || 'http://localhost:3000', // Your Next.js app URL
+      origin: process.env.FRONTEND_URL || 'http://localhost:3000', 
       methods: ['GET', 'POST', 'PATCH', 'DELETE', 'PUT'],
       credentials: true,
     },
@@ -61,14 +61,12 @@ export const initSocket = (httpServer: HttpServer) => {
   io.on('connection', (socket: Socket) => {
     console.log('A user connected:', socket.id);
 
-    // 1. Listen for an event from the client to register their userId
     socket.on('registerUser', (userId: string) => {
       userSocketMap.set(userId, socket.id);
       console.log(`User ${userId} registered with socket ${socket.id}`);
     });
 
     socket.on('disconnect', () => {
-      // 2. Clean up the map when a user disconnects
       for (const [userId, socketId] of userSocketMap.entries()) {
         if (socketId === socket.id) {
           userSocketMap.delete(userId);
@@ -81,7 +79,6 @@ export const initSocket = (httpServer: HttpServer) => {
   });
 };
 
-// Export the io instance to be used elsewhere
 export const getIO = () => {
   if (!io) {
     throw new Error('Socket.IO not initialized!');

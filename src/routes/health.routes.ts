@@ -13,4 +13,8 @@ const router = Router();
  */
 router.get('/check', healthCheck);
 
+router.get('/', (_req, res) => {
+  res.status(200).json({ status: 'ok', message: 'Service is healthy' });
+});
+
 export default router;

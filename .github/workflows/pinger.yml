@@ -1,0 +1,14 @@
+# .github/workflows/pinger.yml
+name: Keep Render Service Alive
+
+on:
+  schedule:
+    # Runs every 14 minutes
+    - cron: '*/14 * * * *'
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send request to Render service
+        run: curl -X GET https://cpms-backend-koqq.onrender.com/api/v1/health

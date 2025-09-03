@@ -28,7 +28,7 @@ export const login = async (
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
       secure: NODE_ENV === 'production' ? true : false,
-      sameSite: NODE_ENV === 'production' ? 'strict' : 'lax',
+      sameSite: NODE_ENV === 'production' ? 'none' : 'lax',
       maxAge: 2 * 60 * 1000, // 2 Minutes
     });
 
@@ -36,7 +36,7 @@ export const login = async (
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: NODE_ENV === 'production' ? true : false,
-      sameSite: NODE_ENV === 'production' ? 'strict' : 'lax',
+      sameSite: NODE_ENV === 'production' ? 'none' : 'lax',
       maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days
     });
 

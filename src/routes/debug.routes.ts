@@ -14,9 +14,9 @@ router.get('/debug-env', (req: Request, res: Response) => {
   console.log(process.env);
   console.log('------------------------------------');
   
-  res.status(200).json({
+  // --- FIX: Added 'return' here ---
+  return res.status(200).json({
     message: 'Environment variables logged on the server. Check your Render logs.',
-    // Be careful not to expose all variables in the response for security
     NODE_ENV: process.env.NODE_ENV,
     CORS_ORIGIN: process.env.CORS_ORIGIN,
     DB_URI_IS_SET: !!process.env.DB_URI,

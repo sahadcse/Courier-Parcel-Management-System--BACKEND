@@ -21,7 +21,7 @@ const parcelSchema = new Schema({
     type: String,
     required: true,
     unique: true,
-    index: true,
+    // index: true,
   },
   sender: {
     type: Schema.Types.ObjectId,
@@ -97,6 +97,6 @@ const parcelSchema = new Schema({
 parcelSchema.index({ sender: 1, status: 1 });
 parcelSchema.index({ assignedAgent: 1, status: 1 });
 parcelSchema.index({ status: 1 });
-parcelSchema.index({ parcelId: 1 });
+// parcelSchema.index({ parcelId: 1 });
 
 export const Parcel = mongoose.model("Parcel", parcelSchema)

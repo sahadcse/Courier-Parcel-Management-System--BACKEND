@@ -48,7 +48,7 @@ const userSchema = new Schema(
 );
 
 // Indexes for quick lookups
-userSchema.index({ email: 1 });
+// userSchema.index({ email: 1 });
 userSchema.index({ role: 1 });
 userSchema.index({ isActive: 1 });
 

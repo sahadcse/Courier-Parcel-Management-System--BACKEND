@@ -10,21 +10,26 @@ interface EnvConfig {
   DB_URI: string;
   ACCESS_TOKEN_SECRET: string;
   ACCESS_TOKEN_EXPIRES_IN: StringValue;
-  // JWT_REFRESH_EXPIRES_IN: StringValue;
+  REFRESH_TOKEN_SECRET: string;
+  REFRESH_TOKEN_EXPIRES_IN: StringValue;
   CORS_ORIGIN: string;
   BCRYPT_ROUNDS: number;
   LOG_LEVEL: string;
   REGISTER_KEY_ADMIN: string;
-  REFRESH_TOKEN_SECRET: StringValue;
-  REFRESH_TOKEN_EXPIRES_IN: StringValue;
 }
 
 const getEnvConfig = (): EnvConfig => {
-  const requiredEnvVars = ['DB_URI', 'ACCESS_TOKEN_SECRET'];
+  // --- Add ALL required secrets to this list ---
+  const requiredEnvVars = [
+    'DB_URI',
+    'ACCESS_TOKEN_SECRET',
+    'REFRESH_TOKEN_SECRET',
+    'REGISTER_KEY_ADMIN',
+  ];
 
   for (const envVar of requiredEnvVars) {
     if (!process.env[envVar]) {
-      console.error(`Missing required environment variable: ${envVar}`);
+      console.error(`FATAL ERROR: Missing required environment variable: ${envVar}`);
       process.exit(1);
     }
   }
@@ -34,15 +39,15 @@ const getEnvConfig = (): EnvConfig => {
     PORT: parseInt(process.env.PORT || '5000', 10),
     DB_URI: process.env.DB_URI!,
     ACCESS_TOKEN_SECRET: process.env.ACCESS_TOKEN_SECRET!,
+    REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET!,
+    REGISTER_KEY_ADMIN: process.env.REGISTER_KEY_ADMIN!,
+
+    // Non-secret values can still have defaults
     ACCESS_TOKEN_EXPIRES_IN: (process.env.ACCESS_TOKEN_EXPIRES_IN || '1h') as StringValue,
-    // JWT_REFRESH_EXPIRES_IN: (process.env.JWT_REFRESH_EXPIRES_IN ||
-    //   '1d') as StringValue,
+    REFRESH_TOKEN_EXPIRES_IN: (process.env.REFRESH_TOKEN_EXPIRES_IN || '2d') as StringValue,
     CORS_ORIGIN: process.env.CORS_ORIGIN || '*',
     BCRYPT_ROUNDS: parseInt(process.env.BCRYPT_ROUNDS || '12', 10),
     LOG_LEVEL: process.env.LOG_LEVEL || 'info',
-    REGISTER_KEY_ADMIN: process.env.REGISTER_KEY_ADMIN || 'itisunknown',
-    REFRESH_TOKEN_SECRET: (process.env.REFRESH_TOKEN_SECRET || 'itisunknownalso') as StringValue,
-    REFRESH_TOKEN_EXPIRES_IN: (process.env.REFRESH_TOKEN_EXPIRES_IN || '2d') as StringValue,
   };
 };
 
@@ -53,7 +58,6 @@ export const {
   DB_URI,
   ACCESS_TOKEN_SECRET,
   ACCESS_TOKEN_EXPIRES_IN,
-  // JWT_REFRESH_EXPIRES_IN,
   CORS_ORIGIN,
   BCRYPT_ROUNDS,
   LOG_LEVEL,

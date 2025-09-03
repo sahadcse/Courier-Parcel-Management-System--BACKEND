@@ -8,7 +8,7 @@ import {
   ConflictError,
   AuthenticationError,
   DatabaseError,
-} from '@utils/errorHandler';
+} from '../utils/errorHandler';
 import {
   RegisterInput,
   LoginInput,
@@ -16,8 +16,8 @@ import {
   AuthResponse,
   UserResponse,
 } from 'types/auth.types';
-import { BCRYPT_ROUNDS } from '@config/env';
-import { signAccessToken,  signRefreshToken } from '@utils/jwt';
+import { BCRYPT_ROUNDS } from '../config/env';
+import { signAccessToken,  signRefreshToken } from '../utils/jwt';
 
 export const registerUser = async (
   input: RegisterInput

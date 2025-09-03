@@ -84,13 +84,13 @@ export const refreshToken = async (
     res.cookie('accessToken', newAccessToken, {
       httpOnly: true,
       secure: NODE_ENV === 'production' ? true : false,
-      sameSite: NODE_ENV === 'production' ? 'strict' : 'lax',
+      sameSite: NODE_ENV === 'production' ? 'none' : 'lax',
       maxAge: 15 * 60 * 1000,
     });
     res.cookie('refreshToken', newRefreshToken, {
       httpOnly: true,
       secure: NODE_ENV === 'production' ? true : false,
-      sameSite: NODE_ENV === 'production' ? 'strict' : 'lax',
+      sameSite: NODE_ENV === 'production' ? 'none' : 'lax',
       maxAge: 2 * 24 * 60 * 60 * 1000,
     });
 
@@ -114,7 +114,7 @@ export const logout = async (
     const cookieOptions: CookieOptions = {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
     };
 
     // Clear both the access token and the refresh token cookies

@@ -1,6 +1,6 @@
 import { Resend } from 'resend';
 import { logger } from '../utils/logger';
-import { IParcel } from 'types/parcel.types'; // Your parcel interface
+import { IParcel } from '../types/parcel.types';
 
 // API key from environment variables
 const resend = new Resend(process.env.RESEND_API_KEY);

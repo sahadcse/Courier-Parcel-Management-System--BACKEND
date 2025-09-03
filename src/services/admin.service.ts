@@ -2,10 +2,10 @@
 
 // src/services/admin.service.ts
 
-import { User } from './../models/user.model';
-import { logger } from './../utils/logger';
+import { User } from '../models/user.model';
+import { logger } from '../utils/logger';
 import { DatabaseError } from '../utils/errorHandler';
-import { UserResponse } from './../types/auth.types';
+import { UserResponse } from '../types/auth.types';
 import { Parcel } from '../models/parcel.model';
 
 /**

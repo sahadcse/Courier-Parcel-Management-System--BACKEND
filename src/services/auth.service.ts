@@ -15,7 +15,7 @@ import {
   UserPayload,
   AuthResponse,
   UserResponse,
-} from 'types/auth.types';
+} from '../types/auth.types';
 import { BCRYPT_ROUNDS } from '../config/env';
 import { signAccessToken,  signRefreshToken } from '../utils/jwt';
 

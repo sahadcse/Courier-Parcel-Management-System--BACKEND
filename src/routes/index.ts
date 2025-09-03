@@ -1,12 +1,12 @@
 // # Combine and export all routes// src/routes/index.ts
 import { Router } from 'express';
-import authRoutes from '../routes/auth.routes';
-import parcelRoutes from '../routes/parcel.routes';
-import agentRoutes from '../routes/agent.routes';
-import adminRoutes from '../routes/admin.routes';
-import trackingRoutes from '../routes/tracking.routes';
+import authRoutes from './auth.routes';
+import parcelRoutes from './parcel.routes';
+import agentRoutes from './agent.routes';
+import adminRoutes from './admin.routes';
+import trackingRoutes from './tracking.routes';
 // import transactionRoutes from '../routes/transaction.routes';
-import healthRoutes from '../routes/health.routes';
+import healthRoutes from './health.routes';
 import debugRoutes from './debug.routes';
 
 const router = Router();

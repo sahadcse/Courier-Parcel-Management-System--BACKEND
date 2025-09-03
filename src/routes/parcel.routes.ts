@@ -8,7 +8,7 @@ import {
   parcelCreateSchema,
   parcelGetSchema,
   parcelUpdateSchema,
-  parcelAdminUpdateSchema, // <-- add this import
+  parcelAdminUpdateSchema,
 } from '../validation/parcel.validation';
 
 const router = Router();

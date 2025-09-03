@@ -21,6 +21,10 @@
 /dist
  
 
+ # testing
+/coverage
+/tests
+/src/tests
 
 # production
 /build

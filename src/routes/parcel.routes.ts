@@ -1,15 +1,15 @@
 // # Parcel API endpoints (/parcels, /parcels/:id)
 
 import { Router } from 'express';
-import { authMiddleware } from '@middlewares/auth.middleware';
-import { validate } from '@middlewares/validation.middleware';
-import * as parcelController from '@controllers/parcel.controller';
+import { authMiddleware } from '../middlewares/auth.middleware';
+import { validate } from '../middlewares/validation.middleware';
+import * as parcelController from '../controllers/parcel.controller';
 import {
   parcelCreateSchema,
   parcelGetSchema,
   parcelUpdateSchema,
   parcelAdminUpdateSchema, // <-- add this import
-} from 'validation/parcel.validation';
+} from '../validation/parcel.validation';
 
 const router = Router();
 

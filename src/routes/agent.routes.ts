@@ -2,9 +2,9 @@
 // agent.routes.ts
 
 import { Router } from 'express';
-import { authMiddleware } from '@middlewares/auth.middleware';
-import * as agentController from '@controllers/agent.controller';
-import { validate } from '@middlewares/validation.middleware';
+import { authMiddleware } from '../middlewares/auth.middleware';
+import * as agentController from '../controllers/agent.controller';
+import { validate } from '../middlewares/validation.middleware';
 import { updateStatusSchema } from 'validation/agent.validation';
 
 const router = Router();

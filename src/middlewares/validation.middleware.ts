@@ -4,8 +4,8 @@
 
 import { Request, Response, NextFunction } from 'express';
 import { z, ZodError } from 'zod';
-import { ValidationError } from '@utils/errorHandler';
-import { logger } from '@utils/logger';
+import { ValidationError } from '../utils/errorHandler';
+import { logger } from '../utils/logger';
 
 // OPTIMIZATION: Define a type for the schema object for clarity.
 // It allows for optional body, query, and params schemas.

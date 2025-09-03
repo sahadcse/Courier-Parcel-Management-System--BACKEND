@@ -2,8 +2,8 @@
 
 // src/services/auth.service.ts
 import bcryptjs from 'bcryptjs';
-import { User } from '@models/index';
-import { logger } from '@utils/logger';
+import { User } from '../models/index';
+import { logger } from '../utils/logger';
 import {
   ConflictError,
   AuthenticationError,

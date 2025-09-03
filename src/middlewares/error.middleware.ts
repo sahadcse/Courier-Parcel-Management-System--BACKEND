@@ -2,9 +2,9 @@
 
 // src/middlewares/error.middleware.ts
 import { Request, Response, NextFunction } from 'express';
-import { HttpError, ValidationError } from '@utils/errorHandler';
-import { logger } from '@utils/logger';
-import { NODE_ENV } from '@config/env';
+import { HttpError, ValidationError } from '../utils/errorHandler';
+import { logger } from '../utils/logger';
+import { NODE_ENV } from '../config/env';
 
 interface ErrorResponse {
   success: false;

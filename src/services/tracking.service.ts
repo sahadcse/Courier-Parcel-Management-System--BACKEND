@@ -1,9 +1,9 @@
 // src/services/tracking.service.ts
 
-import { Parcel } from '@models/parcel.model';
-import { Tracking } from '@models/tracking.model';
-import { logger } from '@utils/logger';
-import { AppError } from '@utils/errorHandler';
+import { Parcel } from '../models/parcel.model';
+import { Tracking } from '../models/tracking.model';
+import { logger } from '../utils/logger';
+import { AppError } from '../utils/errorHandler';
 import { PublicTrackingInfo, TrackingPoint } from 'types/tracking.types';
 import { getIO } from '../config/socket';
 

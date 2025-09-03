@@ -1,7 +1,7 @@
 // src/controllers/health.controller.ts
 import { Request, Response, NextFunction } from 'express';
 import mongoose from 'mongoose';
-import { logger } from '@utils/logger';
+import { logger } from '../utils/logger';
 
 // Interface for health check response
 interface HealthCheckResponse {

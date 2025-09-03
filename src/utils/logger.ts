@@ -2,7 +2,7 @@
 // src/utils/logger.ts
 
 import winston from 'winston';
-import { LOG_LEVEL, NODE_ENV } from '@config/env';
+import { LOG_LEVEL, NODE_ENV } from './../config/env';
 
 const logFormat = winston.format.combine(
   winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),

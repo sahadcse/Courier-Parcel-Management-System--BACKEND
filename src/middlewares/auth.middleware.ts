@@ -2,12 +2,12 @@
 
 // src/middlewares/auth.middleware.ts
 import { Request, Response, NextFunction } from 'express';
-import { logger } from '@utils/logger';
-import { AuthenticationError, AuthorizationError } from '@utils/errorHandler';
-import { UserPayload } from 'types/auth.types';
-import { verifyAccessToken } from '@utils/jwt';
+import { logger } from '../utils/logger';
+import { AuthenticationError, AuthorizationError } from '../utils/errorHandler';
+import { UserPayload } from '../types/auth.types';
+import { verifyAccessToken } from '../utils/jwt';
 import jwt from 'jsonwebtoken';
-// import { verifyToken } from '@services/auth.service';
+// import { verifyToken } from '../services/auth.service';
 
 declare global {
   namespace Express {

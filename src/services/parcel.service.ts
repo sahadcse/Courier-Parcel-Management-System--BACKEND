@@ -1,14 +1,14 @@
 // parcel.service.ts
 // Parcel Database Operations
 
-import { Parcel, Tracking } from '@models/index'; // Assuming your model export
-import { User } from '@models/index';
+import { Parcel, Tracking } from '../models/index'; // Assuming your model export
+import { User } from '../models/index';
 import { getIO } from '../config/socket';
 import { ParcelCreateDTO, IParcel, ServiceResponse } from 'types/parcel.types'; // Assuming your types path
-import { logger } from '@utils/logger'; // Assuming logger path
-import generateParcelId from '@utils/generateParcelId'; // Assuming util path
-import { AppError } from '@utils/errorHandler'; // Assuming error handler path
-import { geocodeAddress } from '@utils/geocoding';
+import { logger } from '../utils/logger'; // Assuming logger path
+import generateParcelId from '../utils/generateParcelId'; // Assuming util path
+import { AppError } from '../utils/errorHandler'; // Assuming error handler path
+import { geocodeAddress } from '../utils/geocoding';
 import { sendBookingConfirmationEmail } from './notification.service';
 
 /**

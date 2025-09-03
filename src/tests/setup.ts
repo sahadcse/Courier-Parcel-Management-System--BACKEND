@@ -1,1 +1,1 @@
-// # Test setup (e.g., mock MongoDB, Supertest)
+// # Test setup (e.g., mock MongoDB, Supertest) for integration tests

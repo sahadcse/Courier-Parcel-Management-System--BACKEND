@@ -2,8 +2,8 @@
 // # Parcel CRUD operations (create, update, delete, get)
 
 import { Request, Response, NextFunction } from 'express';
-import * as parcelService from '@services/parcel.service';
-import { logger } from '@utils/logger';
+import * as parcelService from '../services/parcel.service';
+import { logger } from '../utils/logger';
 
 export const createParcel = async (
   req: Request,

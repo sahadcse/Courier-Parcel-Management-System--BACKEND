@@ -1,8 +1,8 @@
 // # Agent-specific logic (view assigned parcels, update status)
 // agent.controller.ts
 import { Request, Response, NextFunction } from 'express';
-import * as agentService from '@services/agent.service';
-import { logger } from '@utils/logger';
+import * as agentService from '../services/agent.service';
+import { logger } from '../utils/logger';
 
 export const listAgents = async (
   req: Request,

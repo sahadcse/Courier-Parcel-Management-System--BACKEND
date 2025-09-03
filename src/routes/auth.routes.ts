@@ -2,10 +2,10 @@
 
 // src/routes/auth.routes.ts
 import { Router } from 'express';
-import { registerCustomer, registerAdmin, registerAgent, login, logout, me, refreshToken } from '@controllers/auth.controller';
-import { validate } from '@middlewares/validation.middleware';
+import { registerCustomer, registerAdmin, registerAgent, login, logout, me, refreshToken } from '../controllers/auth.controller';
+import { validate } from '../middlewares/validation.middleware';
 import { registerSchema, loginSchema } from 'validation/auth.validation';
-import { authMiddleware } from '@middlewares/auth.middleware';
+import { authMiddleware } from '../middlewares/auth.middleware';
 
 const router = Router();
 

@@ -1,10 +1,10 @@
 // src/routes/tracking.routes.ts
 
 import { Router } from 'express';
-import { validate } from '@middlewares/validation.middleware';
-import * as trackingController from '@controllers/tracking.controller';
-import { getTrackingInfoSchema } from 'validation/tracking.validation';
-import { authMiddleware } from '@middlewares/auth.middleware';
+import { validate } from '../middlewares/validation.middleware';
+import * as trackingController from '../controllers/tracking.controller';
+import { getTrackingInfoSchema } from '../validation/tracking.validation';
+import { authMiddleware } from '../middlewares/auth.middleware';
 
 const router = Router();
 

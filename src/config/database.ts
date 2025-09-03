@@ -2,9 +2,9 @@
 
 // src/config/database.ts
 import mongoose from 'mongoose';
-import { logger } from '@utils/logger';
-import { DB_URI, NODE_ENV } from '@config/env';
-import { DatabaseError } from '@utils/errorHandler';
+import { logger } from '../utils/logger';
+import { DB_URI, NODE_ENV } from '../config/env';
+import { DatabaseError } from '../utils/errorHandler';
 
 // Connect
 if (!DB_URI) {

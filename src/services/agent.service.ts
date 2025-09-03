@@ -1,11 +1,11 @@
 // # Agent business logic (fetch assigned parcels, status updates)
 // agent.service.ts
 
-import { User } from '@models/index';
-import { logger } from '@utils/logger';
-import { DatabaseError } from '@utils/errorHandler';
+import { User } from '../models/index';
+import { logger } from '../utils/logger';
+import { DatabaseError } from '../utils/errorHandler';
 import { UserResponse } from 'types/auth.types';
-import { AppError } from '@utils/errorHandler';
+import { AppError } from '../utils/errorHandler';
 import { getIO, getUserSocketId } from '../config/socket';
 
 export const listAgents = async (): Promise<{

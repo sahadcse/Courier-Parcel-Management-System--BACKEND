@@ -4,7 +4,7 @@ import {
 ACCESS_TOKEN_EXPIRES_IN,
   REFRESH_TOKEN_SECRET,
   REFRESH_TOKEN_EXPIRES_IN,
-} from '@config/env';
+} from './../config/env';
 import { UserPayload } from 'types/auth.types';
 
 // Signs an Access Token (short-lived)

@@ -2,14 +2,14 @@
 
 // src/controllers/auth.controller.ts
 import { Request, Response, NextFunction, CookieOptions } from 'express';
-import { registerUser, loginUser } from '@services/auth.service';
-import { NODE_ENV, REGISTER_KEY_ADMIN } from '@config/env';
+import { registerUser, loginUser } from '../services/auth.service';
+import { NODE_ENV, REGISTER_KEY_ADMIN } from '../config/env';
 import {
   signAccessToken,
   verifyRefreshToken,
   signRefreshToken,
-} from '@utils/jwt';
-import { UserPayload } from 'types/auth.types';
+} from '../utils/jwt';
+import { UserPayload } from '../types/auth.types';
 
 export const login = async (
   req: Request,

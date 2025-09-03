@@ -4,8 +4,8 @@
 // src/controllers/tracking.controller.ts
 
 import { Request, Response, NextFunction } from 'express';
-import * as trackingService from '@services/tracking.service';
-import { logger } from '@utils/logger';
+import * as trackingService from '../services/tracking.service';
+import { logger } from '../utils/logger';
 import { getIO } from '../config/socket';
 
 /**

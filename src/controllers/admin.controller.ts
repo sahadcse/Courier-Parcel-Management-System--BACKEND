@@ -3,8 +3,8 @@
 // src/controllers/admin.controller.ts
 
 import { Request, Response, NextFunction } from 'express';
-import * as userService from '@services/admin.service';
-import { logger } from '@utils/logger';
+import * as userService from '../services/admin.service';
+import { logger } from '../utils/logger';
 
 /**
  * Controller to handle fetching all users.

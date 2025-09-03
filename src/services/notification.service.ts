@@ -1,5 +1,5 @@
 import { Resend } from 'resend';
-import { logger } from '@utils/logger';
+import { logger } from '../utils/logger';
 import { IParcel } from 'types/parcel.types'; // Your parcel interface
 
 // API key from environment variables

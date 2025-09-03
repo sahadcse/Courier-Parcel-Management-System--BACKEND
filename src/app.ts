@@ -12,14 +12,14 @@ import rateLimit from 'express-rate-limit';
 import compression from 'compression';
 import mongoSanitize from 'express-mongo-sanitize';
 import { xss } from 'express-xss-sanitizer';
-import connectDB from '@config/database';
-import routes from '@routes/index';
-import { logger } from '@utils/logger';
+import connectDB from './config/database';
+import routes from './routes/index';
+import { logger } from './utils/logger';
 import {
   errorMiddleware,
   notFoundMiddleware,
-} from '@middlewares/error.middleware';
-import { CORS_ORIGIN, NODE_ENV, PORT } from '@config/env';
+} from './middlewares/error.middleware';
+import { CORS_ORIGIN, NODE_ENV, PORT } from './config/env';
 
 const app = express();
 

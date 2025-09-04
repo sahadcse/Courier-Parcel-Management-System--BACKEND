@@ -13,7 +13,7 @@ export const createParcel = async (
   try {
     const userId = req.user?.id;
 
-    // To ensure user exists before proceeding
+    // User exists check
     if (!userId) {
       return res.status(401).json({ success: false, message: 'Unauthorized' });
     }
@@ -29,7 +29,7 @@ export const createParcel = async (
   return;
 };
 
-// GET /parcels/:id → Get parcel by tracking ID
+// Get parcel by tracking ID
 export const getParcelById = async (
   req: Request,
   res: Response,
@@ -53,7 +53,7 @@ export const getParcelById = async (
   return;
 };
 
-// PATCH /parcels/:parcelId → Update (admin: all fields, agent: status only)
+// admin: all fields, agent: status only
 export const updateParcel = async (
   req: Request,
   res: Response,
@@ -93,7 +93,7 @@ export const updateParcel = async (
   return;
 };
 
-// GET /parcels/all → List parcels (role-based filtering)
+// List parcels (role-based filtering)
 export const listParcels = async (
   req: Request,
   res: Response,

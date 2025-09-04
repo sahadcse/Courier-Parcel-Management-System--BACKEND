@@ -9,6 +9,9 @@ const SENDER_EMAIL = 'workof.graduation@gmail.com';
 
 /**
  * Sends a booking confirmation email to the customer.
+ * @param parcel - The parcel details
+ * @param customerEmail - The customer's email address
+ * @returns A promise that resolves when the email is sent
  */
 export const sendBookingConfirmationEmail = async (
   parcel: IParcel,

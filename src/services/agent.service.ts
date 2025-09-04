@@ -1,4 +1,4 @@
-// # Agent business logic (fetch assigned parcels, status updates)
+// # Agent business logic
 // agent.service.ts
 
 import { User } from '../models/index';
@@ -8,6 +8,11 @@ import { UserResponse } from '../types/auth.types';
 import { AppError } from '../utils/errorHandler';
 import { getIO, getUserSocketId } from '../config/socket';
 
+/**
+ * Fetches a list of all agents from the database.
+ * @returns {Promise<{ success: boolean; data: UserResponse[] }>} A promise that resolves to an object containing a success flag and an array of agent data.
+ * @throws {DatabaseError} If there is an error fetching agents from the database.
+ */
 export const listAgents = async (): Promise<{
   success: boolean;
   data: UserResponse[];
@@ -19,7 +24,7 @@ export const listAgents = async (): Promise<{
       throw new AppError('No agents found', 404);
     }
 
-    // Map the Mongoose documents to your UserResponse DTO
+    // Map the Mongoose documents to the UserResponse DTO
     const agentsData: UserResponse[] = agentsFromDb.map((agent) => {
       return {
         _id: agent.id,
@@ -78,8 +83,7 @@ export const updateAgentStatus = async (
       updatedAt: agent.updatedAt,
     };
 
-    // --- THIS BLOCK IS FIXED ---
-    // Use the 'agent' variable to check for existence
+    // Check for existence
     if (agent) {
       const socketId = getUserSocketId(agentId);
       if (socketId) {
@@ -87,7 +91,6 @@ export const updateAgentStatus = async (
         getIO().to(socketId).emit('user:status-updated', updatedAgentData);
       }
     }
-    // -------------------------
 
     return { success: true, data: updatedAgentData };
   } catch (error) {

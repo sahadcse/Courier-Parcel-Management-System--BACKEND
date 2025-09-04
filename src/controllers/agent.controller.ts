@@ -4,6 +4,10 @@ import { Request, Response, NextFunction } from 'express';
 import * as agentService from '../services/agent.service';
 import { logger } from '../utils/logger';
 
+/**
+ * Controller to list all agents.
+ * Only accessible by admin users.
+ */
 export const listAgents = async (
   req: Request,
   res: Response,

@@ -1,7 +1,9 @@
 import { z } from 'zod';
 
-
-// Zod schema to validate the parcelId from the URL parameters
+/**
+ * Validation schema for tracking information retrieval
+ * Validates the request parameters
+ */
 export const getTrackingInfoSchema = z.object({
   params: z.object({
     parcelId: z

@@ -1,4 +1,4 @@
-// # Agent API endpoints (/agent/parcels, /agent/update-status)
+// # Agent API endpoints
 // agent.routes.ts
 
 import { Router } from 'express';
@@ -9,10 +9,18 @@ import { updateStatusSchema } from '../validation/agent.validation';
 
 const router = Router();
 
-// GET /v1/agent/all → List agents (role: admin)
+/**
+ * @route   GET /api/v1/agent/all
+ * @desc    Get all agents (Admin only)
+ * @access  Private (Admin)
+ */
 router.get('/all', authMiddleware(['admin']), agentController.listAgents);
 
-// PATCH /v1/agent/status/:agentId → Update agent's active status (role: admin)
+/**
+ * @route   PATCH /api/v1/agent/status/:agentId
+ * @desc    Update an agent's active status (Admin only)
+ * @access  Private (Admin)
+ */
 router.patch(
   '/status/:agentId',
   authMiddleware(['admin']),

@@ -86,7 +86,7 @@ export const getIO = () => {
   return io;
 };
 
-// 3. New function to get a specific user's socket ID
+// Function to get a specific user's socket ID
 export const getUserSocketId = (userId: string) => {
   return userSocketMap.get(userId);
 };

@@ -19,6 +19,12 @@ import {
 import { BCRYPT_ROUNDS } from '../config/env';
 import { signAccessToken,  signRefreshToken } from '../utils/jwt';
 
+
+/**
+ * Registers a new user.
+ * @param input - Registration input data
+ * @returns A promise that resolves to the registered user data.
+ */
 export const registerUser = async (
   input: RegisterInput
 ): Promise<UserResponse> => {
@@ -68,6 +74,11 @@ export const registerUser = async (
   }
 };
 
+/**
+ * Logs in an existing user.
+ * @param input - Login input data
+ * @returns A promise that resolves to the authenticated user data.
+ */
 export const loginUser = async (input: LoginInput): Promise<AuthResponse> => {
   try {
     // Find user and include password for verification
@@ -76,7 +87,12 @@ export const loginUser = async (input: LoginInput): Promise<AuthResponse> => {
       throw new AuthenticationError('Invalid credentials');
     }
 
-    // Generate JWT
+    // Check if user is active
+    if (!user.isActive) {
+      throw new AuthenticationError('User account is inactive');
+    }
+
+    // Create JWT payload
     const payload: UserPayload = {
       id: user._id.toString(),
       customerName: user.customerName,
@@ -85,7 +101,7 @@ export const loginUser = async (input: LoginInput): Promise<AuthResponse> => {
       isActive: user.isActive,
     };
 
-    // Use the correct signing functions
+    // Generate tokens
     const accessToken = signAccessToken(payload);
     const refreshToken = signRefreshToken(payload);
 
@@ -115,13 +131,3 @@ export const loginUser = async (input: LoginInput): Promise<AuthResponse> => {
   }
 };
 
-// export const verifyToken = (token: string): UserPayload => {
-//   try {
-//     return verifyJwt(token);
-//   } catch (error) {
-//     if (error instanceof jwt.TokenExpiredError) {
-//       throw new AuthenticationError('Token expired');
-//     }
-//     throw new AuthenticationError('Invalid token');
-//   }
-// };

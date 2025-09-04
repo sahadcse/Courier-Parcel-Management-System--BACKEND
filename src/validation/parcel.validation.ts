@@ -12,17 +12,18 @@ export const parcelCreateSchema = z.object({
       receiverName: z
         .string({ required_error: 'Receiver name is required' })
         .min(1),
-      // OPTIMIZATION: Kept as string, maybe add a regex for basic phone number format
+      // Basic phone validation: digits, spaces, dashes, parentheses, optional leading +
       receiverNumber: z
         .string()
-        .min(8, 'Phone number must be at least 8 digits'),
+        .min(8, 'Phone number must be at least 8 digits')
+        .regex(/^\+?[0-9\s\-\(\)]+$/, 'Invalid phone number format'),
       parcelType: z.string().min(1),
       parcelSize: z.enum(['small', 'medium', 'large']),
       paymentType: z.enum(['COD', 'prepaid']),
       codAmount: z.number().min(0).optional(),
     })
     .superRefine((data, ctx) => {
-      // If payment is 'COD', codAmount must be provided and greater than 0.
+      //  Custom validation: If payment is 'COD', codAmount must be provided and > 0
       if (
         data.paymentType === 'COD' &&
         (!data.codAmount || data.codAmount <= 0)
@@ -33,7 +34,7 @@ export const parcelCreateSchema = z.object({
           path: ['codAmount'],
         });
       }
-      // If payment is 'prepaid', ensure codAmount is not set or is 0.
+      //  Custom validation: If payment is 'prepaid', codAmount should not be set
       if (
         data.paymentType === 'prepaid' &&
         data.codAmount &&
@@ -54,7 +55,7 @@ export const parcelGetSchema = z.object({
   }),
 });
 
-// PATCH validation: Only allow status update, required, must be a valid status
+//  PATCH validation: Agent can update status only
 export const parcelUpdateSchema = z.object({
   body: z.object({
     status: z.enum(
@@ -67,7 +68,7 @@ export const parcelUpdateSchema = z.object({
   }),
 });
 
-// PATCH validation: Admin can update all fields except _id, parcelId, sender, createdAt
+//  PATCH validation: Admin can update all fields
 export const parcelAdminUpdateSchema = z.object({
   body: z.object({
     assignedAgent: z.string().optional(),

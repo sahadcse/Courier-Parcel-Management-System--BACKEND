@@ -18,8 +18,11 @@ export const geocodeAddress = async (address: string): Promise<Coordinates | nul
     // 1. Split the address by commas and trim whitespace from each part.
     const parts = address.split(',').map(part => part.trim());
     
-    // 2. Take the last two parts of the address for the query.
-    // For "Prithimpassa, Kulaura, Moulvibazar", this becomes "Kulaura, Moulvibazar"
+    // 2. Use the last two parts of the address for the query. Example: "Thana, District"
+    if (parts.length < 2) {
+      logger.warn(`Geocoding skipped for address: "${address}". Not enough parts to form a query.`);
+      return null;
+    }
     const queryAddress = parts.slice(-2).join(', ');
     
 
@@ -28,7 +31,7 @@ export const geocodeAddress = async (address: string): Promise<Coordinates | nul
         q: queryAddress,
         format: 'json',
         limit: 1,
-        countrycodes: 'BD', // Limit search to Bangladesh
+        countrycodes: 'BD', // Restrict to Bangladesh
       },
       headers: {
         'User-Agent': 'CourierApp/1.0 (workof.graon@gmail.com)',

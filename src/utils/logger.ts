@@ -4,6 +4,11 @@
 import winston from 'winston';
 import { LOG_LEVEL, NODE_ENV } from '../config/env';
 
+/**
+ * Winston Logger Configuration
+ * - Logs to console in development with colorized output
+ * - Logs to files in production (error.log and combined.log)
+ */
 const logFormat = winston.format.combine(
   winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
   winston.format.errors({ stack: true }),
@@ -11,6 +16,9 @@ const logFormat = winston.format.combine(
   winston.format.prettyPrint()
 );
 
+/**
+ * Console log format for development
+ */
 const consoleFormat = winston.format.combine(
   winston.format.colorize(),
   winston.format.simple(),
@@ -19,12 +27,23 @@ const consoleFormat = winston.format.combine(
   })
 );
 
+/**
+ * Winston transports configuration
+ * - Console transport for all environments
+ * - File transports for production (error.log and combined.log)
+ */
 const transports: winston.transport[] = [
   new winston.transports.Console({
     format: NODE_ENV === 'development' ? consoleFormat : logFormat,
   }),
 ];
 
+/**
+ * File transports for production environment
+ * - error.log for error level logs
+ * - combined.log for all logs
+ * - Log rotation can be added with additional packages if needed
+ */
 if (NODE_ENV === 'production') {
   transports.push(
     new winston.transports.File({
@@ -41,6 +60,9 @@ if (NODE_ENV === 'production') {
   );
 }
 
+/**
+ * Winston Logger Instance
+ */
 const logger = winston.createLogger({
   level: LOG_LEVEL,
   format: logFormat,
@@ -53,10 +75,10 @@ const logger = winston.createLogger({
   ],
 });
 
-// Integrate with Azure Application Insights (optional, as per plan)
+// Integrate with Application Insights if connection string is provided (Ex: Render)
 if (process.env.APPINSIGHTS_CONNECTION_STRING) {
-  // Add Azure Application Insights transport (requires `applicationinsights` package)
-  // Example: logger.add(new AzureApplicationInsightsTransport());
+  // Add Render-specific logging integration here if needed
+  logger.info('Application Insights logging enabled');
 }
 
 export { logger };

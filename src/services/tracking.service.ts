@@ -8,42 +8,13 @@ import { PublicTrackingInfo, TrackingPoint } from '../types/tracking.types';
 import { getIO } from '../config/socket';
 
 /**
- * Adds a new tracking point for a parcel.
- * @param parcelId The parcel's tracking ID.
- * @param coordinates The coordinates object { lat, lng }.
- * @returns The newly created tracking document.
+ * Adds a new tracking point for all active parcels assigned to the given agent.
+ * If the agent has no active parcels, no tracking points are added.
+ * @param parcelId - The public parcel ID (not used in current logic)
+ * @param coordinates - The new coordinates { lat, lng }
+ * @param agentId - The ID of the agent sending the update
+ * @returns A message indicating the result of the operation
  */
-// export const addTrackingPoint = async (
-//   parcelId: string,
-//   coordinates: { lat: number; lng: number }
-// ) => {
-//   // Transform the incoming data into the required GeoJSON format
-//   const geoJsonPoint = {
-//     type: 'Point' as const, // Use 'as const' for strict typing
-//     coordinates: [coordinates.lng, coordinates.lat], // [longitude, latitude]
-//   };
-
-//   // Save the correctly formatted GeoJSON point to the database
-//   const newTrackingPoint = await Tracking.create({
-//     parcel: parcelId,
-//     coordinates: geoJsonPoint,
-//   });
-
-//   // 2. Count the total number of tracking points for this parcel
-//   const count = await Tracking.countDocuments({ parcel: parcelId });
-
-//   // 3. If the count is greater than 10, find and delete the oldest one
-//   if (count > 10) {
-//     // Find the single oldest document by sorting by timestamp in ascending order
-//     const oldestPoint = await Tracking.findOne({ parcel: parcelId }).sort({ timestamp: 1 });
-
-//     if (oldestPoint) {
-//       await Tracking.deleteOne({ _id: oldestPoint._id });
-//     }
-//   }
-
-//   return newTrackingPoint;
-// };
 export const addTrackingPoint = async (
   parcelId: string,
   coordinates: { lat: number; lng: number },
@@ -57,11 +28,11 @@ export const addTrackingPoint = async (
       return { message: 'Parcel ID is required.' };
     }
 
-    // 1. Find all parcels assigned to this agent with an active status.
+    // 1. Find all active parcels assigned to this agent
     const activeParcels = await Parcel.find({
       assignedAgent: agentId,
       status: { $in: ['Assigned', 'Picked Up', 'In Transit'] },
-    }).select('parcelId'); // We only need the public parcelId for the tracking collection
+    }).select('parcelId');
 
     // If the agent has no active parcels, there's nothing to do.
     if (activeParcels.length === 0) {
@@ -71,35 +42,33 @@ export const addTrackingPoint = async (
       return { message: 'No active parcels to update.' };
     }
 
-    // 2. Prepare the data for the update.
+    // 2. Prepare the GeoJSON point
     const geoJsonPoint = {
       type: 'Point' as const,
       coordinates: [coordinates.lng, coordinates.lat],
     };
     const parcelIds = activeParcels.map((p) => p.parcelId);
 
-    // --- THIS IS THE FIX ---
-    // 3. Create an array of update promises, one for each parcel.
+    // 3. Create or update tracking points for each active parcel
     const updatePromises = parcelIds.map((parcelId) =>
       Tracking.findOneAndUpdate(
-        { parcel: parcelId }, // The filter to find the document
+        { parcel: parcelId },
         {
-          // The data to set
+          // Upsert the tracking point
           $set: {
             coordinates: geoJsonPoint,
             timestamp: new Date(),
           },
         },
-        { upsert: true, new: true } // Upsert ensures creation if not found
+        // Create if not exists, return the new document
+        { upsert: true, new: true } 
       )
     );
 
-    // 4. Execute all the updates concurrently.
+    // Wait for all updates to complete
     await Promise.all(updatePromises);
-    // ----------------------
 
-    // 4. (Optional but recommended) Emit a single event for all updated parcels
-    // This is more efficient than sending one event per parcel.
+    // 4. Emit a Socket.IO event to notify clients of the bulk update 
     getIO().emit('bulk-tracking:updated', {
       agentId,
       coordinates,
@@ -120,7 +89,10 @@ export const addTrackingPoint = async (
 };
 
 /**
- * Fetches all relevant tracking information for a given parcelId.
+ * Fetches tracking information for a specific parcel.
+ * @param {string} parcelId - The public parcel ID to fetch tracking info for.
+ * @returns {Promise<{ success: boolean; data: PublicTrackingInfo }>} A promise that resolves to an object containing a success flag and the tracking information.
+ * @throws {AppError} If the parcel is not found or if there is an error fetching the data.
  */
 export const getTrackingInfo = async (
   parcelId: string
@@ -158,7 +130,7 @@ export const getTrackingInfo = async (
       deliveryAddress: parcel.deliveryAddress,
       createdAt: parcel.createdAt,
       updatedAt: parcel.updatedAt,
-      trackingHistory: formattedHistory, // Use the correctly formatted history
+      trackingHistory: formattedHistory, // Include the formatted tracking history
     };
 
     return { success: true, data: responseData };
@@ -174,10 +146,13 @@ export const getTrackingInfo = async (
   }
 };
 
-// New service function to get all latest locations
+/** Fetches live tracking data for all parcels currently in transit.
+ * @returns {Promise<any[]>} A promise that resolves to an array of parcels with their latest tracking coordinates.
+ * @throws {AppError} If there is an error fetching the data.
+ */
 export const getLiveTrackingData = async () => {
   try {
-    // 1. Find all parcels that are currently in an active state
+    // 1. Find all parcels that are currently in transit
     const activeParcels = await Parcel.find({
       status: { $in: ['Picked Up', 'In Transit'] },
     })
@@ -188,7 +163,7 @@ export const getLiveTrackingData = async () => {
       throw new AppError('No active parcels found.', 404);
     }
 
-    // 2. For each active parcel, find its most recent tracking point
+    //  2. For each active parcel, get the latest tracking point
     const liveData = await Promise.all(
       activeParcels.map(async (parcel) => {
         const lastPoint = await Tracking.findOne({
@@ -202,7 +177,7 @@ export const getLiveTrackingData = async () => {
       })
     );
 
-    // 3. Filter out any parcels that have no location data yet
+    //  3. Filter out parcels without tracking data
     const filteredData = liveData.filter((p) => p.coordinates);
     return filteredData;
   } catch (error) {

@@ -48,7 +48,7 @@ export const authMiddleware = (
       }
       req.user = decoded;
 
-      // RBAC: Check if user role is allowed
+      // RBAC: Check if user is allowed
       if (allowedRoles.length > 0 && !allowedRoles.includes(decoded.role)) {
         logger.warn(
           `Authorization failed: User ${decoded.email} with role ${decoded.role} attempted to access restricted resource`
@@ -78,13 +78,11 @@ export const optionalAuth = async (
       try {
         req.user = verifyAccessToken(token);
       } catch {
-        // Ignore authentication errors for optional auth
       }
     }
 
     next();
   } catch {
-    // Ignore authentication errors for optional auth
     next();
   }
 };

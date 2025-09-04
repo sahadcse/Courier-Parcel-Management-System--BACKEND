@@ -52,8 +52,8 @@ export const createParcel = async (
     // Send the notification after successful creation
     const sender = await User.findById(senderId);
     if (sender && sender.email) {
-      // Run this in the background without await to not slow down the API response
-      sendBookingConfirmationEmail(parcel, sender.email);
+      // Send the booking confirmation email in the background
+      await sendBookingConfirmationEmail(parcel, sender.email);
     }
 
     return {
@@ -67,19 +67,18 @@ export const createParcel = async (
       senderId,
     });
 
-    // Handle Mongoose validation errors specifically for better client feedback
+    // Handle specific known errors
     if (error.name === 'ValidationError') {
-      // Throwing a custom error lets the global error handler manage the response
       throw new AppError(
         `Parcel creation failed due to validation errors: ${error.message}`,
-        400 // Bad Request
+        400
       );
     }
 
-    // For other types of errors, throw a generic server error
+    // Generic error handling
     throw new AppError(
       'An unexpected error occurred while creating the parcel.',
-      500 // Internal Server Error
+      500
     );
   }
 };
@@ -115,51 +114,6 @@ export const getParcelById = async (
     );
   }
 };
-
-/**
- * Update the status of a parcel by its tracking ID.
- * @param {string} parcelId - The tracking ID of the parcel.
- * @param {string} status - The new status to set.
- * @param {string} updatedBy - The user ID performing the update.
- * @returns {Promise<ServiceResponse<IParcel>>}
- */
-// export const updateParcelStatus = async (
-//   parcelId: string,
-//   status: string,
-//   updatedBy: string
-// ): Promise<ServiceResponse<IParcel>> => {
-//   try {
-//     const parcel = await Parcel.findOneAndUpdate(
-//       { parcelId },
-//       { status, updatedAt: new Date() },
-//       { new: true }
-//     );
-//     if (!parcel) {
-//       return {
-//         success: false,
-//         error: { message: 'Parcel not found' },
-//       };
-//     }
-//     logger.info(
-//       `Parcel status updated: ${parcelId} → ${status} by ${updatedBy}`
-//     );
-//     return {
-//       success: true,
-//       data: parcel,
-//     };
-//   } catch (error: any) {
-//     logger.error(`Error updating parcel status: ${error.message}`, {
-//       error,
-//       parcelId,
-//       status,
-//       updatedBy,
-//     });
-//     throw new AppError(
-//       'An unexpected error occurred while updating the parcel status.',
-//       500
-//     );
-//   }
-// };
 
 /**
  * Update a parcel (admin: all fields, agent: status only).
@@ -200,13 +154,13 @@ export const updateParcel = async (
       );
     }
 
-    // Only pick allowed fields from updateData
+    // Build the update object dynamically
     const update: any = {};
     for (const key of allowedFields) {
       const typedKey = key as keyof IParcel;
       if (updateData[typedKey] !== undefined)
         update[key] = updateData[typedKey];
-      // If assignedAgent is being updated, also set status to 'Assigned'
+      // If an agent is assigned, automatically set status to 'Assigned'
       if (key === 'assignedAgent' && updateData[typedKey]) {
         update['status'] = 'Assigned';
       }
@@ -225,7 +179,7 @@ export const updateParcel = async (
     }
     logger.info(`Parcel updated: ${parcelId} by ${updatedBy} (${userRole})`);
 
-    // 2. After a successful update, emit the event
+    // Emit real-time update via Socket.IO
     getIO().emit('parcel:updated', parcel);
     logger.info(`Parcel updated: ${parcelId} and event emitted.`);
 
@@ -245,8 +199,7 @@ export const updateParcel = async (
           `Failed to create initial tracking entry for parcel ${parcel.parcelId}:`,
           trackingError
         );
-        // Decide if you want to throw an error or just log it.
-        // For now, we'll log it so the parcel update doesn't fail.
+        
       }
     }
 
@@ -286,7 +239,7 @@ export const listParcels = async (
     } else if (userRole === 'agent') {
       filter = { assignedAgent: userId };
     }
-    // admin: no filter (see all)
+    // Admins get all parcels, so no filter needed
     const parcels = await Parcel.find(filter).sort({ createdAt: -1 });
     return {
       success: true,

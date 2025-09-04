@@ -18,7 +18,7 @@ export const signAccessToken = (payload: UserPayload): string => {
 
 // Verifies an Access Token
 export const verifyAccessToken = (token: string): UserPayload => {
-  // like TokenExpiredError bubble up to the middleware that calls this.
+  // If token is invalid or expired, jwt.verify will throw an error
   return jwt.verify(token, ACCESS_TOKEN_SECRET) as UserPayload;
 };
 

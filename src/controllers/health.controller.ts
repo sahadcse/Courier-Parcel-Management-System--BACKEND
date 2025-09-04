@@ -27,6 +27,6 @@ export const healthCheck = async (
     res.status(200).json(healthStatus);
   } catch (error) {
     logger.error(`Health check error: ${(error as Error).message}`);
-    next(error); // Pass to centralized error middleware
+    next(error);
   }
 };

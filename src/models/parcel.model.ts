@@ -44,7 +44,7 @@ const parcelSchema = new Schema({
   },
   deliveryCoordinates: {
     type: pointSchema,
-    index: '2dsphere' // Important for location-based queries
+    index: '2dsphere' // For location-based queries
   },
   receiverName: {
     type: String,

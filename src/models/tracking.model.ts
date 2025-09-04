@@ -2,7 +2,7 @@
 
 import mongoose, { Schema } from 'mongoose';
 
-// First, define the schema for the nested GeoJSON Point object
+// Schema for the nested GeoJSON Point object
 const pointSchema = new Schema({
   type: {
     type: String,
@@ -15,7 +15,7 @@ const pointSchema = new Schema({
   },
 }, { _id: false }); // Disable _id for this subdocument
 
-// Now, define the main tracking schema
+// Main tracking schema
 const trackingSchema = new Schema({
   parcel: {
     type: String,
@@ -32,7 +32,7 @@ const trackingSchema = new Schema({
   },
 });
 
-// Apply the geospatial index
+// Geospatial index for efficient location queries
 trackingSchema.index({ coordinates: '2dsphere' });
 
 export const Tracking = mongoose.model('Tracking', trackingSchema);

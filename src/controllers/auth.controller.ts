@@ -1,6 +1,6 @@
 // # Auth-related logic (register, login, refresh token)
-
 // src/controllers/auth.controller.ts
+
 import { Request, Response, NextFunction, CookieOptions } from 'express';
 import { registerUser, loginUser } from '../services/auth.service';
 import { NODE_ENV, REGISTER_KEY_ADMIN } from '../config/env';
@@ -24,15 +24,15 @@ export const login = async (
       password,
     });
 
-    // Set JWT in HttpOnly cookie for security
+    // Set Access Token in HttpOnly cookie
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
       secure: NODE_ENV === 'production' ? true : false,
       sameSite: NODE_ENV === 'production' ? 'none' : 'lax',
-      maxAge: 2 * 60 * 1000, // 2 Minutes
+      maxAge: 15 * 60 * 1000, // 15 Minutes
     });
 
-    // Set Refresh Token in HttpOnly cookie for security
+    // Set Refresh Token in HttpOnly cookie
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: NODE_ENV === 'production' ? true : false,
@@ -65,7 +65,7 @@ export const refreshToken = async (
       return res.status(401).send('Access denied. No refresh token provided.');
     }
 
-    // Verify the refresh token using the correct secret
+    // Verify the refresh token
     const decoded = verifyRefreshToken(tokenFromCookie);
 
     const payload: UserPayload = {
@@ -98,7 +98,7 @@ export const refreshToken = async (
       .status(200)
       .json({ success: true, message: 'Token refreshed successfully' });
   } catch (error) {
-    // If the refresh token is invalid, clear both cookies for security
+    // Clear cookies on error
     res.clearCookie('accessToken');
     res.clearCookie('refreshToken');
     next(error);

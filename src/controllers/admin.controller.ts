@@ -24,12 +24,16 @@ export const getAllUsers = async (
       data: users,
     });
   } catch (error) {
-    // Pass errors to the global error handler
     next(error);
   }
 };
 
 
+/**
+ * Controller to handle fetching dashboard analytics.
+ * Includes metrics like total users, active sessions, etc.
+ * This is a placeholder and should be expanded based on actual requirements.
+ */
 export const getDashboardAnalytics = async (
   _req: Request,
   res: Response,
@@ -44,7 +48,6 @@ export const getDashboardAnalytics = async (
       data: analytics,
     });
   } catch (error) {
-    // Pass errors to the global error handler
     next(error);
   }
 };

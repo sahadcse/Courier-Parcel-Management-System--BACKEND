@@ -14,7 +14,7 @@ const router = Router();
  */
 router.get(
   '/all',
-  authMiddleware(['admin']), // Protects the route, only allows admins
+  authMiddleware(['admin']),
   userController.getAllUsers
 );
 

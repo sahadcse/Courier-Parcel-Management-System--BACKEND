@@ -17,9 +17,9 @@ const connectDB = async (): Promise<void> => {
   try {
     // Configure Mongoose connection options
     const options: mongoose.ConnectOptions = {
-      maxPoolSize: NODE_ENV === 'production' ? 20 : 10, // Connection pool size based on environment
+      maxPoolSize: NODE_ENV === 'production' ? 20 : 10, // Connection pool size
       serverSelectionTimeoutMS: 10000, // Timeout for server selection
-      socketTimeoutMS: 45000, // Timeout for socket inactivity
+      socketTimeoutMS: 45000, // Timeout for inactivity
       bufferCommands: false, // Disable mongoose buffering
       retryWrites: true, // Enable retryable writes
       w: 'majority', // Write concern

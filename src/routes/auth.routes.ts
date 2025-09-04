@@ -1,6 +1,6 @@
-// # Auth API endpoints (/register, /login)
-
+// # Auth API endpoints 
 // src/routes/auth.routes.ts
+
 import { Router } from 'express';
 import { registerCustomer, registerAdmin, registerAgent, login, logout, me, refreshToken } from '../controllers/auth.controller';
 import { validate } from '../middlewares/validation.middleware';

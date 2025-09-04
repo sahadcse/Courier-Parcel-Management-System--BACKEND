@@ -13,7 +13,11 @@ import {
 
 const router = Router();
 
-// POST /v1/parcels/create → Create booking (customer)
+/**
+ * @route   POST /api/v1/parcels/create
+ * @desc    Create a new parcel booking (Customer, Admin)
+ * @access  Private (Customer, Admin)
+ */
 router.post(
   '/create',
   authMiddleware(['customer', 'admin']),
@@ -21,7 +25,11 @@ router.post(
   parcelController.createParcel
 );
 
-// GET /v1/parcels/all → List parcels (role-based filtering)
+/**
+ * @route   GET /api/v1/parcels/all
+ * @desc    Get all parcels (Customer, Admin, Agent)
+ * @access  Private (Customer, Admin, Agent)
+ */
 router.get(
   '/all',
   authMiddleware(['customer', 'admin', 'agent']),
@@ -29,7 +37,10 @@ router.get(
 );
 
 
-// PATCH /v1/parcels/:parcelId → Update status (agent, admin)
+/** * @route   PATCH /api/v1/parcels/:parcelId
+ * @desc    Update parcel details (Agent, Admin)
+ * @access  Private (Agent, Admin)
+ */
 router.patch(
   '/:parcelId',
   authMiddleware(['agent', 'admin']),
@@ -43,7 +54,11 @@ router.patch(
   parcelController.updateParcel
 );
 
-// GET /v1/parcels/:parcelId → Get parcel by tracking ID (customer, admin, agent)
+/**
+ * @route   GET /api/v1/parcels/:parcelId
+ * @desc    Get parcel by tracking ID (Customer, Admin, Agent)
+ * @access  Private (Customer, Admin, Agent)
+ */
 router.get(
   '/:parcelId',
   authMiddleware(['customer', 'admin', 'agent']),

@@ -1,1 +1,1 @@
-// # Transaction API endpoints (/transactions, /transactions/:id)
+// # Transaction API endpoints

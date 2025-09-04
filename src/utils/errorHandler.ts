@@ -1,6 +1,11 @@
 // # Custom error classes and utilities
-
 // src/utils/errorHandler.ts
+
+/**
+ * Custom Error Classes
+ * - HttpError: Base class for HTTP errors
+ * - AppError: General application error
+ */
 export class HttpError extends Error {
   status: number;
   isOperational: boolean;
@@ -14,6 +19,11 @@ export class HttpError extends Error {
   }
 }
 
+/**
+ * AppError: General application error
+ * - Inherits from HttpError
+ * - Default status code is 500
+ */
 export class AppError extends HttpError {
   constructor(message: string, status = 500) {
     super(status, message);
@@ -21,6 +31,11 @@ export class AppError extends HttpError {
   }
 }
 
+/**
+ * ValidationError: Error for validation failures
+ * - Inherits from HttpError
+ * - Default status code is 400
+ */
 export class ValidationError extends HttpError {
   public details?: { field: string; message: string }[];
   constructor(message: string, details?: { field: string; message: string }[]) {
@@ -30,6 +45,9 @@ export class ValidationError extends HttpError {
   }
 }
 
+/** Other specific error classes can be added here as needed
+ * e.g., AuthenticationError, AuthorizationError, NotFoundError, etc.
+ */
 export class AuthenticationError extends HttpError {
   constructor(message = 'Authentication failed') {
     super(401, message);
@@ -37,6 +55,11 @@ export class AuthenticationError extends HttpError {
   }
 }
 
+/**
+ * AuthorizationError: Error for authorization failures
+ * - Inherits from HttpError
+ * - Default status code is 403
+ */
 export class AuthorizationError extends HttpError {
   constructor(message = 'Access denied') {
     super(403, message);
@@ -44,6 +67,9 @@ export class AuthorizationError extends HttpError {
   }
 }
 
+/**
+ * NotFoundError: Error for resource not found
+ */
 export class NotFoundError extends HttpError {
   constructor(message = 'Resource not found') {
     super(404, message);
@@ -51,6 +77,9 @@ export class NotFoundError extends HttpError {
   }
 }
 
+/**
+ * ConflictError: Error for resource conflicts
+ */
 export class ConflictError extends HttpError {
   constructor(message = 'Resource conflict') {
     super(409, message);
@@ -58,6 +87,9 @@ export class ConflictError extends HttpError {
   }
 }
 
+/**
+ * DatabaseError: Error for database operation failures
+ */
 export class DatabaseError extends HttpError {
   constructor(message = 'Database operation failed') {
     super(500, message, false);

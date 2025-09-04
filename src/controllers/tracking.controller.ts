@@ -1,7 +1,6 @@
 // # Real-time tracking (get/update coordinates)
 
 // src/controllers/tracking.controller.ts
-// src/controllers/tracking.controller.ts
 
 import { Request, Response, NextFunction } from 'express';
 import * as trackingService from '../services/tracking.service';
@@ -9,7 +8,7 @@ import { logger } from '../utils/logger';
 import { getIO } from '../config/socket';
 
 /**
- * Handles the request to get tracking information for a parcel.
+ * Request to get tracking information for a parcel.
  */
 export const getTrackingInfo = async (
   req: Request,
@@ -37,10 +36,13 @@ export const postTrackingUpdate = async (
   req: Request,
   res: Response,
   next: NextFunction
-) => {
+): Promise<any> => {
   try {
     const { parcelId, coordinates } = req.body;
-    const id = req.user?.id || ''; // Assuming auth middleware sets req.user
+    const id = req.user?.id || '';
+    if (!id) {
+      return res.status(401).json({ success: false, message: 'Unauthorized' });
+    }
 
     const newTrackingPoint = await trackingService.addTrackingPoint(
       parcelId,
@@ -57,6 +59,11 @@ export const postTrackingUpdate = async (
   }
 };
 
+/**
+ * Controller to fetch live tracking data for all parcels.
+ * This endpoint fetches the latest tracking data for all parcels.
+ * Returns the latest tracking data for all parcels.
+*/
 export const getLiveTrackingData = async (
   _req: Request,
   res: Response,

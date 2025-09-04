@@ -1,6 +1,9 @@
 import { z } from 'zod';
 
-// Schema for validating the incoming request
+/**
+ * Validation schema for updating agent status
+ * Validates the request parameters and body
+ */
 export const updateStatusSchema = z.object({
   params: z.object({
     agentId: z.string().regex(/^[0-9a-fA-F]{24}$/, 'Invalid agent ID format'),

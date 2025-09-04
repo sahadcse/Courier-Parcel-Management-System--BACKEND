@@ -1,5 +1,4 @@
 // # Zod-based input validation
-
 // src/middlewares/validation.middleware.ts
 
 import { Request, Response, NextFunction } from 'express';
@@ -7,7 +6,7 @@ import { z, ZodError } from 'zod';
 import { ValidationError } from '../utils/errorHandler';
 import { logger } from '../utils/logger';
 
-// OPTIMIZATION: Define a type for the schema object for clarity.
+// OPTIM: Define a type for the schema object for clarity.
 // It allows for optional body, query, and params schemas.
 type ValidationSchema = z.ZodObject<{
   body?: z.ZodTypeAny;
@@ -18,7 +17,7 @@ type ValidationSchema = z.ZodObject<{
 export const validate = (schema: ValidationSchema) => {
   return async (req: Request, _res: Response, next: NextFunction) => {
     try {
-      // OPTIMIZATION: Parse and replace request data.
+      // OPTIM: Parse and replace request data.
       // This sanitizes inputs and ensures downstream handlers get typed data.
       const parsed = await schema.parseAsync({
         body: req.body,

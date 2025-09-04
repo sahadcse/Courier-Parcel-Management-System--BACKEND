@@ -19,7 +19,7 @@ export interface TrackingPoint {
 export interface PublicTrackingInfo {
   parcelId: string;
   status: string;
-  assignedAgent?: any; // Consider creating a lean agent DTO
+  assignedAgent?: any; // Can be populated with agent details
   pickupAddress: string;
   deliveryAddress: string;
   createdAt: Date;

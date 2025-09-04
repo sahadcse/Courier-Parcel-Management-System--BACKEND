@@ -1,5 +1,4 @@
-// # Admin business logic (analytics, agent assignment)
-
+// # Admin business logic
 // src/services/admin.service.ts
 
 import { User } from '../models/user.model';
@@ -40,9 +39,13 @@ export const getAllUsers = async (): Promise<UserResponse[]> => {
   }
 };
 
+/**
+ * Fetch dashboard analytics data.
+ * @returns An object containing various dashboard analytics.
+ */
 export const getDashboardAnalytics = async () => {
   try {
-    // Example: Daily bookings for the last 7 days
+    // Daily bookings for the last 7 days
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
@@ -57,7 +60,7 @@ export const getDashboardAnalytics = async () => {
       { $sort: { _id: 1 } },
     ]);
 
-    // Example: COD Totals and Failed Deliveries
+    // COD Totals and Failed Deliveries
     const statusStats = await Parcel.aggregate([
       {
         $group: {

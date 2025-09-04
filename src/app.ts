@@ -1,20 +1,19 @@
 // # Main Express app setup (middleware, routes, Socket.IO)
+// src/app.ts
 
-// ADD THESE LINES AT THE VERY TOP OF THE FILE
+// ADDED FOR BETTER ERROR HANDLING
 process.on('unhandledRejection', (reason, promise) => {
   console.error('FATAL: Unhandled Rejection at:', promise, 'reason:', reason);
-  // Application specific logging, throwing an error, or other logic here
+  //  Application specific logging, throwing an error, or other logic here
 });
 
 process.on('uncaughtException', (error) => {
   console.error('FATAL: Uncaught Exception:', error);
-  // Application specific logging, throwing an error, or other logic here
-  process.exit(1); // It's generally recommended to exit on uncaught exceptions
+  //  Application specific logging, cleanup or other logic here
+  process.exit(1); // Mandatory (as per the Node.js docs)
 });
-// END OF NEW LINES
 
 
-// src/app.ts
 import express, { Request, Response } from 'express';
 import http from 'http';
 import { initSocket } from './config/socket';
@@ -37,6 +36,7 @@ import { CORS_ORIGIN, NODE_ENV, PORT } from './config/env';
 
 const app = express();
 
+// Trust proxy if behind a reverse proxy (Render)
 app.set('trust proxy', 1);
 
 // Security middleware
@@ -50,11 +50,15 @@ app.use(
     },
   })
 );
-app.disable('x-powered-by'); // Disable X-Powered-By header for security
-// Rate limiting
+
+// Hide Express usage
+app.disable('x-powered-by'); 
+
+
+// Rate limiting middleware
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: NODE_ENV === 'production' ? 100 : 5000, // limit each IP
+  max: NODE_ENV === 'production' ? 60 : 5000, // limit each IP
   message: 'Too many requests from this IP, please try again later.',
   standardHeaders: true,
   legacyHeaders: false,
@@ -66,9 +70,10 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(cookieParser());
 
-// Input sanitization middleware
+// Data sanitization against NoSQL injection
 app.use(mongoSanitize());
-app.use(xss()); // Prevents XSS by sanitizing all string inputs
+// Data sanitization against XSS
+app.use(xss()); 
 
 // Compression middleware
 app.use(compression());
@@ -82,7 +87,7 @@ app.use(
   })
 );
 
-// Request logging in development
+// Development logging
 if (NODE_ENV === 'development') {
   app.use((req: Request, _res: Response, next) => {
     logger.info(`${req.method} ${req.path} - ${req.ip}`);
@@ -90,9 +95,9 @@ if (NODE_ENV === 'development') {
   });
 }
 
-// API routes
 
-// Health check fallback
+// API routes
+// Health check route
 app.get('/', (_req: Request, res: Response) => {
   res.status(200).json({
     message: 'Courier & Parcel Management System API',
@@ -107,13 +112,13 @@ app.use('/api', routes);
 // 404 handler
 app.use(notFoundMiddleware);
 
-// Error handling middleware (must be last)
+// Global error handler
 app.use(errorMiddleware);
 
 const httpServer = http.createServer(app);
 initSocket(httpServer);
 
-// Initialize database and start server
+// Start server and connect to DB
 const startServer = async (): Promise<void> => {
   try {
     await connectDB();
@@ -135,6 +140,7 @@ const startServer = async (): Promise<void> => {
   }
 };
 
+// Start the server
 startServer();
 
 export default app;

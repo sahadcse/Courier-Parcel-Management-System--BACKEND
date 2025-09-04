@@ -17,7 +17,14 @@ interface ErrorResponse {
   };
 }
 
-
+/**
+ * Error handling middleware
+ * @param error - The error object
+ * @param req - The request object
+ * @param res - The response object
+ * @param _next - The next middleware function
+ * @returns 
+ */
 export const errorMiddleware = (
   error: Error | HttpError,
   req: Request,
@@ -88,6 +95,12 @@ export const errorMiddleware = (
   res.status(status).json(errorResponse);
 };
 
+
+/**
+ * Middleware to handle 404 Not Found errors
+ * @param req - The request object
+ * @param res - The response object
+ */
 export const notFoundMiddleware = (req: Request, res: Response): void => {
   const message = `Route ${req.originalUrl} not found`;
   logger.warn(`404 - ${message} - ${req.method} - ${req.ip}`);

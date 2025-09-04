@@ -19,7 +19,7 @@ interface EnvConfig {
 }
 
 const getEnvConfig = (): EnvConfig => {
-  // --- Add ALL required secrets to this list ---
+  // --- Add ALL required secrets ---
   const requiredEnvVars = [
     'DB_URI',
     'ACCESS_TOKEN_SECRET',
@@ -42,7 +42,7 @@ const getEnvConfig = (): EnvConfig => {
     REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET!,
     REGISTER_KEY_ADMIN: process.env.REGISTER_KEY_ADMIN!,
 
-    // Non-secret values can still have defaults
+    // Non-secret values with defaults
     ACCESS_TOKEN_EXPIRES_IN: (process.env.ACCESS_TOKEN_EXPIRES_IN || '1h') as StringValue,
     REFRESH_TOKEN_EXPIRES_IN: (process.env.REFRESH_TOKEN_EXPIRES_IN || '2d') as StringValue,
     CORS_ORIGIN: process.env.CORS_ORIGIN || '*',

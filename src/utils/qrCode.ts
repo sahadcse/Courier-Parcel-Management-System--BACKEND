@@ -1,1 +1,1 @@
-// # QR code generation utility (bonus)
+// # QR code generation utility

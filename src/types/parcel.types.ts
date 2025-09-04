@@ -1,8 +1,8 @@
-// # TypeScript interfaces for parcels (Optimized)
+// src/types/parcel.types.ts
 
 import { Document, Types } from 'mongoose';
 
-// Define the possible string literal types for enums to ensure type safety
+//  Defining possible values for certain fields
 export type ParcelSize = 'small' | 'medium' | 'large';
 export type PaymentType = 'COD' | 'prepaid';
 export type ParcelStatus = 'Booked' | 'Assigned' | 'Picked Up' | 'In Transit' | 'Delivered' | 'Failed';
@@ -14,8 +14,8 @@ export type ParcelStatus = 'Booked' | 'Assigned' | 'Picked Up' | 'In Transit' | 
  */
 export interface IParcel extends Document {
   parcelId: string;
-  sender: Types.ObjectId; // Represents the User's ID
-  assignedAgent?: Types.ObjectId | null; // Optional User ID for the agent
+  sender: Types.ObjectId; //  User ID of the sender
+  assignedAgent?: Types.ObjectId | null; //   User ID of the assigned agent, if any
   pickupAddress: string;
   deliveryAddress: string;
   receiverName: string;
@@ -26,8 +26,8 @@ export interface IParcel extends Document {
   codAmount: number;
   status: ParcelStatus;
   qrCode?: string | null;
-  createdAt: Date; // Automatically added by timestamps
-  updatedAt: Date; // Automatically added by timestamps
+  createdAt: Date; // Date when the parcel was created
+  updatedAt: Date; // Date when the parcel was last updated
 }
 
 /**
@@ -44,7 +44,7 @@ export interface ParcelCreateDTO {
   parcelType: string;
   parcelSize: ParcelSize;
   paymentType: PaymentType;
-  codAmount?: number; // Optional, as it depends on paymentType
+  codAmount?: number; // Optional, required if paymentType is 'COD'
 }
 
 /**

@@ -1,4 +1,4 @@
-// # TypeScript interfaces for auth (User, Token)
+// Interfaces for auth (User, Token)
 
 export interface User {
   _id: string;

@@ -31,7 +31,7 @@ export const errorMiddleware = (
   res: Response,
   _next: NextFunction
 ): void => {
-  if(error instanceof ValidationError){
+  if (error instanceof ValidationError) {
     const status = error.status;
     const message = error.message;
 
@@ -48,7 +48,7 @@ export const errorMiddleware = (
         timestamp: new Date().toISOString(),
       },
     };
-    if (NODE_ENV === 'development'){
+    if (NODE_ENV === 'development') {
       errorResponse.error.stack = error.stack;
     }
 
@@ -66,17 +66,25 @@ export const errorMiddleware = (
   }
 
   // Log error with request context
-  logger.error(
-    `${status} - ${message} - ${req.originalUrl} - ${req.method} - ${req.ip}`,
-    {
-      error: error.message,
-      stack: error.stack,
-      url: req.originalUrl,
-      method: req.method,
-      ip: req.ip,
-      userAgent: req.get('User-Agent'),
-    }
-  );
+  // Determine log level based on status code
+  if (status >= 500) {
+    logger.error(
+      `${status} - ${message} - ${req.originalUrl} - ${req.method} - ${req.ip}`,
+      {
+        error: error.message,
+        stack: error.stack,
+        url: req.originalUrl,
+        method: req.method,
+        ip: req.ip,
+        userAgent: req.get('User-Agent'),
+      }
+    );
+  } else {
+    // Log client errors (4xx) as warnings to avoid cluttering error logs
+    logger.warn(
+      `${status} - ${message} - ${req.originalUrl} - ${req.method} - ${req.ip}`
+    );
+  }
 
   const errorResponse: ErrorResponse = {
     success: false,

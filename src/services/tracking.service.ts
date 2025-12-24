@@ -4,7 +4,6 @@ import { Parcel } from '../models/parcel.model';
 import { Tracking } from '../models/tracking.model';
 import { logger } from '../utils/logger';
 import { AppError } from '../utils/errorHandler';
-import { PublicTrackingInfo, TrackingPoint } from '../types/tracking.types';
 import { getIO } from '../config/socket';
 
 /**
@@ -61,7 +60,7 @@ export const addTrackingPoint = async (
           },
         },
         // Create if not exists, return the new document
-        { upsert: true, new: true } 
+        { upsert: true, new: true }
       )
     );
 
@@ -96,41 +95,21 @@ export const addTrackingPoint = async (
  */
 export const getTrackingInfo = async (
   parcelId: string
-): Promise<{ success: boolean; data: PublicTrackingInfo }> => {
+): Promise<{ success: boolean; data: any }> => {
   try {
-    const parcel = await Parcel.findOne({ parcelId })
-      .select(
-        'parcelId status assignedAgent pickupAddress deliveryAddress createdAt updatedAt'
-      )
-      .populate('assignedAgent', 'customerName phone');
+    const parcel = await Parcel.findOne({ parcelId }).select('parcelId status');
 
     if (!parcel) {
+      // Use a special return here or throw a specific error that is handled gracefully by the controller
+      // But based on the request to stop logging errors for 404, we can return null and handle it in controller
       throw new AppError('No parcel found with this tracking ID', 404);
     }
 
-    const trackingHistory = await Tracking.find({ parcel: parcelId }).sort({
-      timestamp: 1,
-    });
-
-    const formattedHistory: TrackingPoint[] = trackingHistory
-      .filter((t) => t.coordinates && t.coordinates.coordinates)
-      .map((t) => ({
-        coordinates: {
-          lng: t.coordinates.coordinates[0],
-          lat: t.coordinates.coordinates[1],
-        },
-        timestamp: t.timestamp,
-      }));
-
-    const responseData: PublicTrackingInfo = {
+    // Simplified response as requested
+    const responseData = {
       parcelId: parcel.parcelId,
       status: parcel.status,
-      assignedAgent: parcel.assignedAgent,
-      pickupAddress: parcel.pickupAddress,
-      deliveryAddress: parcel.deliveryAddress,
-      createdAt: parcel.createdAt,
-      updatedAt: parcel.updatedAt,
-      trackingHistory: formattedHistory, // Include the formatted tracking history
+      helpline: '+880 1746669174', // Hardcoded helpline as example
     };
 
     return { success: true, data: responseData };

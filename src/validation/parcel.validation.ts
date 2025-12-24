@@ -3,12 +3,17 @@ import { z } from 'zod';
 export const parcelCreateSchema = z.object({
   body: z
     .object({
-      pickupAddress: z
-        .string({ required_error: 'Pickup address is required' })
-        .min(1),
-      deliveryAddress: z
-        .string({ required_error: 'Delivery address is required' })
-        .min(1),
+      pickupAddress: z.string().optional(),
+      pickupExactLocation: z.string().optional(), // Made optional
+      pickupCoordinates: z.object({
+        lat: z.number(),
+        lng: z.number(),
+      }).optional(),
+      deliveryAddress: z.string().optional(), // Made optional
+      deliveryCoordinates: z.object({
+        lat: z.number(),
+        lng: z.number(),
+      }).optional(),
       receiverName: z
         .string({ required_error: 'Receiver name is required' })
         .min(1),
@@ -23,6 +28,30 @@ export const parcelCreateSchema = z.object({
       codAmount: z.number().min(0).optional(),
     })
     .superRefine((data, ctx) => {
+      // 1. Pickup Location Validation: Either text OR coordinates required
+      const hasPickupText = !!data.pickupExactLocation?.trim();
+      const hasPickupMap = !!data.pickupCoordinates;
+
+      if (!hasPickupText && !hasPickupMap) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Please provide either a Pickup Address or select a Location on the Map.',
+          path: ['pickupExactLocation'], // Highlight text input by default
+        });
+      }
+
+      // 2. Delivery Location Validation: Either text OR coordinates required
+      const hasDeliveryText = !!data.deliveryAddress?.trim();
+      const hasDeliveryMap = !!data.deliveryCoordinates;
+
+      if (!hasDeliveryText && !hasDeliveryMap) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Please provide either a Delivery Address or select a Location on the Map.',
+          path: ['deliveryAddress'],
+        });
+      }
+
       //  Custom validation: If payment is 'COD', codAmount must be provided and > 0
       if (
         data.paymentType === 'COD' &&
@@ -73,6 +102,11 @@ export const parcelAdminUpdateSchema = z.object({
   body: z.object({
     assignedAgent: z.string().optional(),
     pickupAddress: z.string().optional(),
+    pickupExactLocation: z.string().optional(),
+    pickupCoordinates: z.object({
+      type: z.literal('Point'),
+      coordinates: z.tuple([z.number(), z.number()]),
+    }).optional(),
     deliveryAddress: z.string().optional(),
     receiverName: z.string().optional(),
     receiverNumber: z.string().optional(),

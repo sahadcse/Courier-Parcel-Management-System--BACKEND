@@ -23,8 +23,9 @@ export const createParcel = async (
   senderId: string
 ): Promise<ServiceResponse<IParcel>> => {
   try {
-    const pickupAddress = input.pickupAddress?.trim() || '';
-    const branchCode = pickupAddress.split(' ')[0] || 'BR001';
+    const pickupAddress = input.pickupAddress?.trim() || 'Pending Assignment';
+    // Use 'WEB' as default branch code if no specific pickup hub is selected yet
+    const branchCode = pickupAddress === 'Pending Assignment' ? 'WEB' : (pickupAddress.split(' ')[0] || 'WEB');
     const parcelId = generateParcelId(branchCode);
 
     const coordinates = await geocodeAddress(input.deliveryAddress);
@@ -37,12 +38,21 @@ export const createParcel = async (
       };
     }
 
+    let pickupCoordinates;
+    if (input.pickupCoordinates) {
+      pickupCoordinates = {
+        type: 'Point',
+        coordinates: [input.pickupCoordinates.lng, input.pickupCoordinates.lat],
+      };
+    }
+
     const parcelDataToSave = {
       ...input,
       parcelId,
       sender: senderId,
       status: 'Booked',
       deliveryCoordinates,
+      pickupCoordinates,
     };
 
     const parcel = await Parcel.create(parcelDataToSave);
@@ -136,6 +146,8 @@ export const updateParcel = async (
       allowedFields = [
         'assignedAgent',
         'pickupAddress',
+        'pickupExactLocation',
+        'pickupCoordinates',
         'deliveryAddress',
         'receiverName',
         'receiverNumber',
@@ -199,7 +211,7 @@ export const updateParcel = async (
           `Failed to create initial tracking entry for parcel ${parcel.parcelId}:`,
           trackingError
         );
-        
+
       }
     }
 

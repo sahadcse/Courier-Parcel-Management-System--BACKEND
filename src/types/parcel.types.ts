@@ -17,7 +17,16 @@ export interface IParcel extends Document {
   sender: Types.ObjectId; //  User ID of the sender
   assignedAgent?: Types.ObjectId | null; //   User ID of the assigned agent, if any
   pickupAddress: string;
-  deliveryAddress: string;
+  pickupExactLocation?: string; //  Made optional
+  pickupCoordinates?: {
+    type: 'Point';
+    coordinates: number[];
+  } | null;
+  deliveryAddress?: string; //  Made optional
+  deliveryCoordinates?: {
+    type: 'Point';
+    coordinates: number[];
+  } | null;
   receiverName: string;
   receiverNumber: string;
   parcelType: string;
@@ -37,8 +46,17 @@ export interface IParcel extends Document {
  * It omits server-generated fields like parcelId, sender, status, etc.
  */
 export interface ParcelCreateDTO {
-  pickupAddress: string;
-  deliveryAddress: string;
+  pickupAddress?: string;
+  pickupExactLocation?: string;
+  pickupCoordinates?: {
+    lat: number;
+    lng: number;
+  };
+  deliveryAddress?: string;
+  deliveryCoordinates?: {
+    lat: number;
+    lng: number;
+  };
   receiverName: string;
   receiverNumber: string;
   parcelType: string;
@@ -56,7 +74,16 @@ export interface ParcelCreateDTO {
 export type ParcelUpdateDTO = Partial<{
   assignedAgent: Types.ObjectId;
   pickupAddress: string;
+  pickupExactLocation: string;
+  pickupCoordinates: {
+    type: 'Point';
+    coordinates: [number, number];
+  };
   deliveryAddress: string;
+  deliveryCoordinates: {
+    type: 'Point';
+    coordinates: [number, number];
+  };
   receiverName: string;
   receiverNumber: string;
   parcelType: string;

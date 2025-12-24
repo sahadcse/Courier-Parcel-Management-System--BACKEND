@@ -34,12 +34,21 @@ const parcelSchema = new Schema({
   },
   pickupAddress: {
     type: String,
-    required: true,
     trim: true,
+    default: 'Pending Assignment',
+  },
+  pickupExactLocation: {
+    type: String,
+    // required: true, // Made optional to allow map-only selection
+    trim: true,
+  },
+  pickupCoordinates: {
+    type: pointSchema,
+    index: '2dsphere'
   },
   deliveryAddress: {
     type: String,
-    required: true,
+    // required: true, // Made optional to allow map-only selection
     trim: true,
   },
   deliveryCoordinates: {
@@ -52,7 +61,7 @@ const parcelSchema = new Schema({
     trim: true,
   },
   receiverNumber: {
-    type: String, 
+    type: String,
     required: true,
     trim: true,
   },
@@ -91,7 +100,7 @@ const parcelSchema = new Schema({
     default: null,
   },
 }, {
-  timestamps: true, 
+  timestamps: true,
 });
 
 parcelSchema.index({ sender: 1, status: 1 });

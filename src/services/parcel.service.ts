@@ -28,7 +28,7 @@ export const createParcel = async (
     const branchCode = pickupAddress === 'Pending Assignment' ? 'WEB' : (pickupAddress.split(' ')[0] || 'WEB');
     const parcelId = generateParcelId(branchCode);
 
-    const coordinates = await geocodeAddress(input.deliveryAddress);
+    const coordinates = input.deliveryAddress ? await geocodeAddress(input.deliveryAddress) : null;
 
     let deliveryCoordinates;
     if (coordinates) {

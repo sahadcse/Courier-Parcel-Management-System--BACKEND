@@ -22,7 +22,7 @@ export const createMessage = async (req: Request, res: Response, next: NextFunct
     }
 };
 
-export const getAllMessages = async (req: Request, res: Response, next: NextFunction) => {
+export const getAllMessages = async (_req: Request, res: Response, next: NextFunction) => {
     try {
         const messages = await Contact.find().sort({ createdAt: -1 });
 

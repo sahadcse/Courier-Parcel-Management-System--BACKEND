@@ -17,12 +17,12 @@ export interface IParcel extends Document {
   sender: Types.ObjectId; //  User ID of the sender
   assignedAgent?: Types.ObjectId | null; //   User ID of the assigned agent, if any
   pickupAddress: string;
-  pickupExactLocation?: string; //  Made optional
+  pickupExactLocation?: string | null; //  Made optional
   pickupCoordinates?: {
     type: 'Point';
     coordinates: number[];
   } | null;
-  deliveryAddress?: string; //  Made optional
+  deliveryAddress?: string | null; //  Made optional
   deliveryCoordinates?: {
     type: 'Point';
     coordinates: number[];
